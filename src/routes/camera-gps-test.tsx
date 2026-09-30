@@ -138,7 +138,7 @@ function CameraGpsTest() {
   };
 
   const send = async () => {
-    const base = import.meta.env.VITE_API_URL as string | undefined;
+    const base = import.meta.env["VITE_API_URL"] as string | undefined;
     if (!base) {
       const m = "VITE_API_URL sozlanmagan";
       setResp(m);
