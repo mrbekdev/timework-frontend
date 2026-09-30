@@ -10,33 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CameraGpsTestRouteImport } from './routes/camera-gps-test'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CameraGpsTestRoute = CameraGpsTestRouteImport.update({
+  id: '/camera-gps-test',
+  path: '/camera-gps-test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/camera-gps-test': typeof CameraGpsTestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/camera-gps-test': typeof CameraGpsTestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/camera-gps-test': typeof CameraGpsTestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/camera-gps-test'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/camera-gps-test'
+  id: '__root__' | '/' | '/camera-gps-test'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CameraGpsTestRoute: typeof CameraGpsTestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/camera-gps-test': {
+      id: '/camera-gps-test'
+      path: '/camera-gps-test'
+      fullPath: '/camera-gps-test'
+      preLoaderRoute: typeof CameraGpsTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CameraGpsTestRoute: CameraGpsTestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
