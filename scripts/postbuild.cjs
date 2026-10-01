@@ -113,6 +113,11 @@ const htaccessContent = `<IfModule mod_rewrite.c>
 `;
 fs.writeFileSync(path.join(distDir, '.htaccess'), htaccessContent, 'utf-8');
 
+const vercelJsonContent = JSON.stringify({
+  rewrites: [{ source: '/(.*)', destination: '/index.html' }]
+}, null, 2);
+fs.writeFileSync(path.join(distDir, 'vercel.json'), vercelJsonContent, 'utf-8');
+
 console.log('✅ dist/ successfully created with:');
 console.log('   - dist/index.html');
 console.log('   - dist/assets/ (' + (fs.existsSync(assetsDir) ? fs.readdirSync(assetsDir).length : 0) + ' bundle files)');
