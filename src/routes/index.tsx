@@ -845,8 +845,23 @@ function TimeWorkKioskPage() {
         <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-teal-500 text-white shadow-2xl font-black text-2xl tracking-wider">
-                T
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900 border border-teal-500/40 text-white shadow-2xl shadow-teal-500/10 p-2.5 overflow-hidden group">
+                <svg viewBox="0 0 48 48" fill="none" className="w-full h-full">
+                  <path d="M10 16 V 11 A 2 2 0 0 1 12 9 H 17" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M31 9 H 36 A 2 2 0 0 1 38 11 V 16" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M38 32 V 37 A 2 2 0 0 1 36 39 H 31" stroke="#14b8a6" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M17 39 H 12 A 2 2 0 0 1 10 37 V 32" stroke="#14b8a6" strokeWidth="2.5" strokeLinecap="round" />
+                  <circle cx="24" cy="24" r="9" stroke="url(#logoGrad)" strokeWidth="2" fill="#030712" fillOpacity="0.7" />
+                  <path d="M24 18 V 24 L 28 26.5" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="24" cy="24" r="1.5" fill="#14b8a6" />
+                  <defs>
+                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#38bdf8" />
+                      <stop offset="50%" stopColor="#6366f1" />
+                      <stop offset="100%" stopColor="#14b8a6" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
               <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-500 border-2 border-slate-950 animate-pulse"></div>
             </div>

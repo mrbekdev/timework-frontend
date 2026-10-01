@@ -80,7 +80,8 @@ const indexHtmlContent = `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>TimeWork — Davomat va Shaxsiy Kabinet</title>
     <meta name="description" content="FaceID 2.0 AI va GPS orqali ishga keldim / ketdim avtomatik qayd qilish stansiyasi." />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
     ${cssFile ? `<link rel="stylesheet" href="/assets/${cssFile}" />` : ''}
 ${preloadTags}
   </head>
