@@ -2,15 +2,20 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
-const outputPublicDir = path.join(rootDir, '.output', 'public');
+const candidateDirs = [
+  path.join(rootDir, '.output', 'public'),
+  path.join(rootDir, '.vercel', 'output', 'static'),
+];
+const outputPublicDir = candidateDirs.find(d => fs.existsSync(d));
 const distDir = path.join(rootDir, 'dist');
 
 console.log('📦 Generating dist/ folder for web hosting...');
 
-if (!fs.existsSync(outputPublicDir)) {
-  console.error('❌ .output/public directory not found. Please run vite build first.');
+if (!outputPublicDir) {
+  console.error('❌ Build output directory not found (.output/public or .vercel/output/static). Please run vite build first.');
   process.exit(1);
 }
+console.log(`📂 Using build output from: ${outputPublicDir}`);
 
 // 1. Recreate dist directory
 if (fs.existsSync(distDir)) {
@@ -97,6 +102,19 @@ for (const r of routesToPrerender) {
   const rDir = path.join(distDir, r);
   fs.mkdirSync(rDir, { recursive: true });
   fs.writeFileSync(path.join(rDir, 'index.html'), indexHtmlContent, 'utf-8');
+}
+
+// If building for Vercel, also sync to .vercel/output/static
+const vercelStatic = path.join(rootDir, '.vercel', 'output', 'static');
+if (fs.existsSync(vercelStatic)) {
+  fs.writeFileSync(path.join(vercelStatic, 'index.html'), indexHtmlContent, 'utf-8');
+  fs.writeFileSync(path.join(vercelStatic, '200.html'), indexHtmlContent, 'utf-8');
+  fs.writeFileSync(path.join(vercelStatic, '404.html'), indexHtmlContent, 'utf-8');
+  for (const r of routesToPrerender) {
+    const rDir = path.join(vercelStatic, r);
+    fs.mkdirSync(rDir, { recursive: true });
+    fs.writeFileSync(path.join(rDir, 'index.html'), indexHtmlContent, 'utf-8');
+  }
 }
 
 // 5. Add SPA redirect rules for Apache and Netlify/Cloudflare
