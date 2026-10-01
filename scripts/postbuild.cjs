@@ -85,6 +85,23 @@ const indexHtmlContent = `<!DOCTYPE html>
 ${preloadTags}
   </head>
   <body class="min-h-screen bg-slate-950 text-white font-sans antialiased">
+    <script>
+      window.$_TSR = {
+        buffer: [],
+        initialized: false,
+        router: {
+          matches: [],
+          manifest: undefined,
+          dehydratedData: {},
+          lastMatchId: undefined
+        },
+        h: function() { this.hydrated = true; },
+        e: function() { this.streamEnded = true; },
+        c: function() {},
+        p: function(fn) { if (typeof fn === 'function') fn(); }
+      };
+      self.$_TSR = window.$_TSR;
+    </script>
     <div id="root"></div>
     ${mainJsFile ? `<script type="module" src="/assets/${mainJsFile}"></script>` : ''}
   </body>
