@@ -224,9 +224,14 @@ function TimeWorkKioskPage() {
 
   const getCurrentGpsPromise = (): Promise<GpsCoords> =>
     new Promise((resolve) => {
+      // Agar avvalroq GPS olingan bo'lsa, uni DARHOL (0ms) ishlatamiz!
+      if (gps && gps.lat && gps.lng) {
+        return resolve(gps);
+      }
+
       if (typeof navigator === "undefined" || !navigator.geolocation) {
         fetchIpLocationForKiosk().then((ipGps) => {
-          resolve(ipGps || gps || { lat: 41.311081, lng: 69.240562, accuracy: 999 });
+          resolve(ipGps || { lat: 41.311081, lng: 69.240562, accuracy: 999 });
         });
         return;
       }
@@ -241,14 +246,14 @@ function TimeWorkKioskPage() {
           done,
           async () => {
             const ipGps = await fetchIpLocationForKiosk();
-            resolve(ipGps || gps || { lat: 41.311081, lng: 69.240562, accuracy: 999 });
+            resolve(ipGps || { lat: 41.311081, lng: 69.240562, accuracy: 999 });
           },
-          { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 },
+          { enableHighAccuracy: false, timeout: 3000, maximumAge: 300000 },
         );
       };
       navigator.geolocation.getCurrentPosition(done, fallback, {
         enableHighAccuracy: true,
-        timeout: 10000,
+        timeout: 3000,
         maximumAge: 60000,
       });
     });
@@ -614,19 +619,32 @@ function TimeWorkKioskPage() {
       const hasLiveVideo = !photoPreview && videoRef.current && videoRef.current.videoWidth > 0;
       if (hasLiveVideo && videoRef.current) {
         const video = videoRef.current;
-        canvas.width = video.videoWidth || 640;
-        canvas.height = video.videoHeight || 480;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        let targetW = video.videoWidth || 640;
+        let targetH = video.videoHeight || 480;
+        const MAX_DIM = 640;
+        if (targetW > MAX_DIM || targetH > MAX_DIM) {
+          if (targetW > targetH) {
+            targetH = Math.round((targetH * MAX_DIM) / targetW);
+            targetW = MAX_DIM;
+          } else {
+            targetW = Math.round((targetW * MAX_DIM) / targetH);
+            targetH = MAX_DIM;
+          }
+        }
+        canvas.width = targetW;
+        canvas.height = targetH;
+        ctx.drawImage(video, 0, 0, targetW, targetH);
       }
 
       if (!canvas.width || !canvas.height) {
         throw new Error("Камерадан расм олинмади. Камера тайёр бўлишини кутинг ёки селфи юкланг.");
       }
 
-      const base64Img = canvas.toDataURL("image/jpeg", 0.8);
+      // 0.7 sifat bilan rasm hajmi ~50 KB bo'ladi, internetda 50ms da yuboriladi
+      const base64Img = canvas.toDataURL("image/jpeg", 0.7);
 
       const [faceResult, freshGps] = await Promise.all([
-        extractFaceDescriptorFromBase64(hasLiveVideo && videoRef.current ? videoRef.current : canvas),
+        extractFaceDescriptorFromBase64(canvas),
         getCurrentGpsPromise(),
       ]);
 
